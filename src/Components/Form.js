@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import * as Yup from 'yup';
 import axios from 'axios';
 import { withFormik, Form, Field } from 'formik';
@@ -62,6 +63,16 @@ const OnboardForm = ({ values, status, touched, errors }) => {
 
         <button type='submit'>Submit</button>
       </Form>
+
+      <div className='display-info'>
+        {info.map(ele => (
+          <ul key={ele.id}>
+            <li id='lists'>Username: {ele.username}</li>
+            <li id='lists'>Email: {ele.email}</li>
+            <li id='lists'> Term of Services: </li>
+          </ul>
+        ))}
+      </div>
     </div>
   ); //close return
 }; //close form
@@ -74,24 +85,24 @@ const FormikOnboardForm = withFormik({
       email: email || '',
       tos: tos || ''
     }; //close return
-    validationSchema: Yup.object().shape({
-      username: Yup.string().required('Enter a name.'),
-      password: Yup.string().required('Enter valid passwod'),
-      email: Yup.string().required('Enter eamil')
-    });
+  }, //close propstovalue
+  validationSchema: Yup.object().shape({
+    username: Yup.string().required('Enter a name.'),
+    password: Yup.string().required('Enter valid passwod'),
+    email: Yup.string().required('Enter eamil')
+  }),
 
-    // handleSubmit(values, {setStatus}) {
-    //     axios
-    //     .post('https://reqres.in/api/users_', values)
-    //     .then(res=>{
-    //         setStatus(res.data);
-    //         console.log(res.data);
-    //     })
-    //     .catch(error=>{
-    //         console.log('error', error);
-    //     })
-    // }
-  } //close propstovalue
+  handleSubmit(values, { setStatus }) {
+    axios
+      .post('https://reqres.in/api/users_', values)
+      .then(res => {
+        setStatus(res.data);
+        console.log(res.data);
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  }
 })(OnboardForm); //close formik form
 
 export default FormikOnboardForm;
